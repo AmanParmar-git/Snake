@@ -17,7 +17,7 @@ public class Main {
     public static ArrayList<Node> snakeTail;
     private static int snakeLength;
     public static Node food;
-    public static ArrayList<Node> path ;
+    public static ArrayList<Node> path;
     private static boolean horizontal = true;
     private static boolean vertical = true;
     public static HashSet<Node> visited;
@@ -25,11 +25,11 @@ public class Main {
 
     //you can actually tweak this variables :
 
-     // frame's width and height
+    // frame's width and height
     private static final int frameWidthAndHeight = 600;
 
-     //size of node in grid
-    public static int rectSize = 15;
+    //size of node in grid
+    public static int rectSize = 10;
 
     // 0 = player movement
     // 1 = a* or dijkstra path finding
@@ -40,37 +40,37 @@ public class Main {
     public static boolean showPath = true;
 
     //set delay to slow down algorithm
-    private static final long delay = 10;
+    private static final long delay = 5;
 
-     // 1 = BFS , 2 = A*
+    // 1 = BFS , 2 = A*
     private static final int algo = 1;
-    
+
     private static double totalNodes;
 
     public static void main(String[] args) {
         f = new JFrame();
         random = new Random();
-        f.setSize(frameWidthAndHeight,frameWidthAndHeight);
+        f.setSize(frameWidthAndHeight, frameWidthAndHeight);
         totalNodes = Math.pow(frameWidthAndHeight / rectSize, 2);
-        board = new Node[f.getHeight()/rectSize][f.getWidth()/rectSize];
+        board = new Node[f.getHeight() / rectSize][f.getWidth() / rectSize];
         height = board.length;
         width = board[0].length;
 
-        for(int i = 0 ; i < height ; i++){
-            for(int j = 0; j < width ; j++){
-                    board[i][j] = new Node(i,j);
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                board[i][j] = new Node(i, j);
             }
         }
 
-        f.setSize(f.getWidth() + 14,f.getHeight() + 37);
+        f.setSize(f.getWidth() + 14, f.getHeight() + 37);
 
 
-        snakeHead = new Node(0,0);
+        snakeHead = new Node(0, 0);
         snakeLength = 1;
         snakeTail = new ArrayList<>();
         visited = new HashSet<>();
         path = new ArrayList<>();
-        food = new Node(random.nextInt(height),random.nextInt(width));
+        food = new Node(random.nextInt(height), random.nextInt(width));
 
         f.addKeyListener(new KeyListener() {
             @Override
@@ -80,9 +80,9 @@ public class Main {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                switch (e.getKeyChar()){
-                    case 'w':{
-                        if(vertical) {
+                switch (e.getKeyChar()) {
+                    case 'w': {
+                        if (vertical) {
                             vertical = false;
                             horizontal = true;
                             snakeHead.setYs(-1);
@@ -90,24 +90,26 @@ public class Main {
                         }
                         break;
                     }
-                    case 's':{
-                        if(vertical) {
+                    case 's': {
+                        if (vertical) {
                             vertical = false;
                             horizontal = true;
                             snakeHead.setYs(1);
                             snakeHead.setXs(0);
                         }
                         break;
-                    }case 'a':{
-                        if(horizontal) {
+                    }
+                    case 'a': {
+                        if (horizontal) {
                             horizontal = false;
                             vertical = true;
                             snakeHead.setYs(0);
                             snakeHead.setXs(-1);
                         }
                         break;
-                    }case 'd':{
-                        if(horizontal) {
+                    }
+                    case 'd': {
+                        if (horizontal) {
                             horizontal = false;
                             vertical = true;
                             snakeHead.setYs(0);
@@ -115,7 +117,7 @@ public class Main {
                         }
                         break;
                     }
-                    case 'q':{
+                    case 'q': {
                         new Thread(Main::startGame).start();
                         break;
                     }
@@ -129,8 +131,8 @@ public class Main {
         });
         Canvas canvas = new Canvas();
         f.add(canvas);
-        Astar(snakeHead,food);
-        if(mode == 2){
+        Astar(snakeHead, food);
+        if (mode == 2) {
             new Thread(Main::generateCycle).start();
         }
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -139,54 +141,59 @@ public class Main {
 
     private static void generateCycle() {
         Node start = board[0][0];
-            dfs(start, visited);
-
+        dfs(start, visited);
     }
+
 
     private static void dfs(Node node, HashSet<Node> visited) {
 
-        if(visited.contains(node))
+        if (visited.contains(node))
             return;
 
         visited.add(node);
         node.setIndex(temp);
         temp++;
-       // Delay();
+        // Delay();
         f.repaint();
         int x = node.getX();
         int y = node.getY();
-        if(x < width - 1){
-            if(board[x+1][y].getParent() == null){
-                board[x+1][y].setParent(node);
+        if (x < width - 1) {
+            if (board[x + 1][y].getParent() == null) {
+                board[x + 1][y].setParent(node);
             }
-            dfs(board[x+1][y],visited);
+            dfs(board[x + 1][y], visited);
         }
-        if(y <  height - 1){
-            if(board[x][y+1].getParent() == null){
-                board[x][y+1].setParent(node);
+        if (y < height - 1) {
+            if (board[x][y + 1].getParent() == null) {
+                board[x][y + 1].setParent(node);
             }
-            dfs(board[x][y+1],visited);
+            dfs(board[x][y + 1], visited);
         }
 
 
-        if(y >= 1){
-            if(board[x][y-1].getParent() == null){
-                board[x][y-1].setParent(node);
+        if (y >= 1) {
+            if (board[x][y - 1].getParent() == null) {
+                board[x][y - 1].setParent(node);
             }
-            dfs(board[x][y-1],visited);
+            dfs(board[x][y - 1], visited);
         }
-        if(x >= 1){
-            if(board[x-1][y].getParent() == null){
-                board[x-1][y].setParent(node);
+        if (x >= 1) {
+            if (board[x - 1][y].getParent() == null) {
+                board[x - 1][y].setParent(node);
             }
-            dfs(board[x-1][y],visited);
+            dfs(board[x - 1][y], visited);
         }
 
 
     }
 
-    private static void startGame(){
-        while (true){
+    private static void startGame() {
+        while (true) {
+            if (snakeLength == temp - 1) {
+                System.out.println("Game Over");
+                System.out.println("Score = " + snakeLength);
+                break;
+            }
             try {
                 switch (mode) {
                     case 0 -> movement();
@@ -196,11 +203,11 @@ public class Main {
                     case 2 -> hamiltonianPath();
 
                 }
-            }
-                 catch (Exception e) {
-                     System.out.println("Game Over");
-                     System.out.println("Score = " + snakeLength);
-                    break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Game Over");
+                System.out.println("Score = " + snakeLength);
+                break;
             }
         }
     }
@@ -219,7 +226,7 @@ public class Main {
 
         f.repaint();
 
-        if(equal(snakeHead,food)) {
+        if (equal(snakeHead, food)) {
             snakeLength++;
             generateFood();
         }
@@ -233,31 +240,43 @@ public class Main {
         if (i == totalNodes) {
             return board[0][0];
         }
-
-        if(j < i){
-            children.sort(Comparator.comparingInt(Node::getIndex).reversed());
-            return children.get(0);
-        }
-
         Node next = null;
-        for (var child : children) {
-            if (child.getIndex() < j && child.getIndex() > i) {
-                if(next == null)
-                    next = child;
 
-                else if (!snakeTail.isEmpty() && child.getIndex() < snakeTail.get(0).getIndex() && next.getIndex() > child.getIndex()) {
-                        next = child;
-                }
+        if (j < i) {
+            // children.sort(Comparator.comparingInt(Node::getIndex));
+            for (var child : children) {
+                if (child.getIndex() < snakeTail.get(0).getIndex() && next == null && child.getIndex() < j) {
+                    next = child;
+                } else if (next != null && child.getIndex() < snakeTail.get(0).getIndex() && next.getIndex() > child.getIndex() && child.getIndex() < j)
+                    next = child;
             }
         }
 
         if (next != null)
             return next;
 
-            for (var child : children) {
-                if (child.getIndex() == i + 1)
-                    return child;
+
+        for (var child : children) {
+            if (child.getIndex() < j && child.getIndex() > i) {
+                if(next == null)
+                    next = child;
+
+                else if (!snakeTail.isEmpty() && child.getIndex() < snakeTail.get(0).getIndex() && next.getIndex() > child.getIndex()) {
+                    next = child;
+                }
             }
+        }
+
+
+        if (next != null)
+            return next;
+
+        for(var a : board){
+            for(var b : a){
+                if(i + 1 == b.getIndex())
+                    return b;
+            }
+        }
 
             return null;
         }

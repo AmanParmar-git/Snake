@@ -1,8 +1,6 @@
-package com.company;
-
+package snake;
 import java.util.*;
-
-import static com.company.Main.*;
+import static snake.Main.*;
 
 public class Algorithms {
 

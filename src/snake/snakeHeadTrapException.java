@@ -1,4 +1,4 @@
-package com.company;
+package snake;
 
 public class snakeHeadTrapException extends Exception {
     @Override

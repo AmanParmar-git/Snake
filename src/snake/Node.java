@@ -1,4 +1,4 @@
-package com.company;
+package snake;
 
 public class Node {
     int x;

@@ -1,11 +1,10 @@
-package com.company;
+package snake;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
-
-import static com.company.Algorithms.*;
+import static snake.Algorithms.*;
 
 public class Main {
 
@@ -26,24 +25,24 @@ public class Main {
     //you can actually tweak this variables :
 
     // frame's width and height
-    private static final int frameWidthAndHeight = 600;
+    private static final int frameWidthAndHeight = 800;
 
     //size of node in grid
-    public static int rectSize = 10;
+    public static int rectSize = 20;
 
     // 0 = player movement
-    // 1 = a* or dijkstra path finding
+    // 1 = BFS or A* pathfinding
     // 2 = hamiltonian cycle
     private static final int mode = 2;
-
-    //when using PathFinding set this true to see path snake following.
-    public static boolean showPath = true;
-
-    //set delay to slow down algorithm
-    private static final long delay = 5;
-
     // 1 = BFS , 2 = A*
     private static final int algo = 1;
+
+    //when using PathFinding set this true to see path snake following.
+    public static boolean showPath = false;
+
+    //set delay to control speed of algorithm
+    private static final long delay = 1;
+
 
     private static double totalNodes;
 
@@ -62,7 +61,7 @@ public class Main {
             }
         }
 
-        f.setSize(f.getWidth() + 14, f.getHeight() + 37);
+        f.setSize(f.getWidth(), f.getHeight() + 37);
 
 
         snakeHead = new Node(0, 0);
@@ -131,11 +130,12 @@ public class Main {
         });
         Canvas canvas = new Canvas();
         f.add(canvas);
-        Astar(snakeHead, food);
+       
         if (mode == 2) {
             new Thread(Main::generateCycle).start();
         }
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setTitle("Snake");
         f.setVisible(true);
     }
 
@@ -326,7 +326,7 @@ public class Main {
             }
     }
 
-    private static void movement() {
+    private static void movement() throws snakeHeadTrapException {
 
         snakeHead.setX(snakeHead.getX() + snakeHead.getXs());
         snakeHead.setY(snakeHead.getY() + snakeHead.getYs());
@@ -348,11 +348,11 @@ public class Main {
             generateFood();
         }
 
-        while (snakeTail.size() >= snakeLength) snakeTail.remove(snakeTail.size() - 1);
+        while (snakeTail.size() >= snakeLength) snakeTail.remove(0);
 
         Delay();
 
-        if(snakeTail.contains(board[snakeHead.getX()][snakeHead.getY()])) snakeLength = 1;
+        if(snakeTail.contains(board[snakeHead.getX()][snakeHead.getY()])) throw new snakeHeadTrapException();
 
         snakeTail.add(board[snakeHead.getX()][snakeHead.getY()]);
 

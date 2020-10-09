@@ -1,12 +1,12 @@
-package com.company;
-
+package snake;
 import javax.swing.*;
 import java.awt.*;
-import static com.company.Main.*;
+import static snake.Main.*;
 
 public class Canvas extends JComponent {
 
-    @Override
+
+	@Override
     public void paint(Graphics g) {
         for(int i = 0; i < Main.height * rectSize; i+=rectSize){
             for(int j = 0; j < Main.width * rectSize; j+=rectSize){
